@@ -1,25 +1,27 @@
 import socket
 import concurrent.futures
 import argparse
+from utils import grab_banner
 
 def scan_port(ip, port, timeout=1):
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.settimeout(timeout)
             s.connect((ip, port))
-            return port, True
+            banner = grab_banner(s)
+            return port, True, banner
     except:
-        return port, False
+        return port, False, None
     
 def scan_range(ip, start_port, end_port, threads=100):
     results = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
         futures = [executor.submit(scan_port, ip, port) for port in range(start_port, end_port+1)]
         for f in concurrent.futures.as_completed(futures):
-            port, is_open = f.result()
+            port, is_open, banner = f.result()
             if is_open:
-                results.append(port)
-                print(f"Port {port} is open")
+                results.append((port, banner))
+                print(f"Port {port} is open, Banner: {banner}")
     
     return results
 
