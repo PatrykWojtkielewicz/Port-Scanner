@@ -8,6 +8,12 @@ Basic port scanner written in python. Useful when mapping an organization's atta
 - Multithreading
 - Clean CLI output
 
+## Utilities
+
+- Retrieving banner from an open socket
+- Reverse DNS lookup to get the hostname
+- Returns the standard service name for a given port
+
 ## Example usage
 
-`python scanner.py URL -sp STARTING_PORT -ep ENDING_PORT`
+![Example usage](https://i.imgur.com/1X2X67O.png)

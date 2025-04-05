@@ -1,7 +1,7 @@
 import socket
 import concurrent.futures
 import argparse
-from utils import grab_banner
+from utils import grab_banner, resolve_hostname, check_common_services
 
 def scan_port(ip, port, timeout=1):
     try:
@@ -21,7 +21,9 @@ def scan_range(ip, start_port, end_port, threads=100):
             port, is_open, banner = f.result()
             if is_open:
                 results.append((port, banner))
-                print(f"Port {port} is open, Banner: {banner}")
+                service = check_common_services(port)
+                hostname = resolve_hostname(ip) or ip
+                print(f"{hostname}:{port} ({service}) is open. Banner: {banner}")
     
     return results
 
